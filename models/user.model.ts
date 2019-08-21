@@ -22,12 +22,12 @@ class User {
         });
     }
 
-    public register(username: string, password: string, callback: Function): void {
+    public register(username: string, password: string, realname: string, phoneNumber: string, callback: Function): void {
         this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
             if (err) {
                 callback({ message: "failed", err });
             } else if (res == null) {
-                new this.userModelInstance({username: encrypt(username), password: encrypt(password)}).save((err: object): void => {
+                new this.userModelInstance({username: encrypt(username), password: encrypt(password), realname, phoneNumber}).save((err: object): void => {
                     if (err)
                         callback({ message: "failed", err });
                     else

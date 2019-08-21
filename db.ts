@@ -6,7 +6,7 @@ class DB {
     public initialize(): void {
         mongoose.connect(`mongodb://localhost/${config.db.name}`, {
             useNewUrlParser: true
-        })
+        });
     }
 }
 

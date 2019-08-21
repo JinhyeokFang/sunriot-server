@@ -23,9 +23,9 @@ class AuthController {
     }
     
     public register(req: Request, res: Response): void {
-        let { username, password } = req.body;  
+        let { username, password, realname, phoneNumber } = req.body;  
         
-        user.register(username, password, (result: any): void => {
+        user.register(username, password, realname, phoneNumber, (result: any): void => {
             if (result.err == "the user already exist.") {
                 ResponseForbidden(res, {});
             } else if (result.err) {

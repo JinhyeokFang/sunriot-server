@@ -6,7 +6,7 @@ import cors from 'cors';
 
 import config from './config';
 
-import db from './db'
+import db from './db';
 
 import IndexRoute from './inputs/index.route';
 import AuthRoute from './inputs/auth.route';
@@ -33,6 +33,4 @@ app.use('/room', RoomRoute);
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-app.listen(config.port, (): void => {
-    console.log(`Listening at http://localhost:${config.port}/`);
-});
+app.listen(config.port, (): void => console.log(`Listening at http://localhost:${config.port}/`));

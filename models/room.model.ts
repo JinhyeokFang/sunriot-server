@@ -4,6 +4,7 @@ import RoomModel from '../types/room.type';
 
 const roomSchema = new Schema({
     roomNumber: Number,
+    roomName: String,
     active: Boolean,
     username: String
 });
