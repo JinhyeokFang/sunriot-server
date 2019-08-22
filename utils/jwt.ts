@@ -8,4 +8,14 @@ var decodeToken = function (token: string): any {
     return decode(token, "SECRET_KEY");
 }
 
-export { encodeToken, decodeToken };
+var isVaildToken = function (token: any): boolean {
+    let decodedToken = decodeToken(token);
+    if (decodedToken.time == undefined)
+        return false;
+    else if (new Date().getTime() - decodedToken.time > 1000 * 60 * 60 * 24)
+        return false;
+    else
+        return true;
+}
+
+export { encodeToken, decodeToken, isVaildToken };
