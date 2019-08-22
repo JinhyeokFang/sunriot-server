@@ -5,37 +5,60 @@ import UserModel from '../types/user.type';
 
 const userSchema = new Schema({
     username: String,
-    password: String
+    password: String,
+    realname: String,
+    phoneNumber: String
 });
 
 class User {
     private userModelInstance: Model<UserModel> = model("user", userSchema);
-    public login(username: string, password: string, callback: Function): void {
-        this.userModelInstance.findOne({username: encrypt(username), password: encrypt(password)}, (err: object, res: UserModel): void => {
-            if (err) {
-                callback({ message: "failed", err });
-            } else if (res == null) {
-                callback({ message: "failed", err: "the user not found" });
-            } else {
-                callback({ message: "complete" });
-            }
+    public login(username: string, password: string): Promise<any> {
+        return new Promise((resolve: Function, reject: Function): void => {
+            this.userModelInstance.findOne({username: encrypt(username), password: encrypt(password)}, (err: object, res: UserModel): void => {
+                if (err) {
+                    reject({ err });
+                } else if (res == null) {
+                    reject({ err: "the user not found" });
+                } else {
+                    resolve({});
+                }
+            });
         });
     }
 
-    public register(username: string, password: string, realname: string, phoneNumber: string, callback: Function): void {
-        this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
-            if (err) {
-                callback({ message: "failed", err });
-            } else if (res == null) {
-                new this.userModelInstance({username: encrypt(username), password: encrypt(password), realname, phoneNumber}).save((err: object): void => {
-                    if (err)
-                        callback({ message: "failed", err });
-                    else
-                        callback({ message: "complete" });
-                })
-            } else {
-                callback({ message: "failed", err: "the user already exist."});
-            }
+    public register(username: string, password: string, realname: string, phoneNumber: string): Promise<any> {
+        return new Promise((resolve: Function, reject: Function): void => {
+            this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
+                if (err) {
+                    reject({ err });
+                } else if (res == null) {
+                    new this.userModelInstance({username: encrypt(username), password: encrypt(password), realname, phoneNumber}).save((err: object): void => {
+                        if (err)
+                            reject({ err });
+                        else
+                            resolve({});
+                    })
+                } else {
+                    reject({ err: "the user already exist."});
+                }
+            });
+        });
+    }
+
+    public getUserProfile(username: string): Promise<any> {
+        return new Promise((resolve: Function, reject: Function): void => {
+            this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
+                if (err) {
+                    reject({ err });
+                } else if (res == null) {
+                    reject({ err: "the user not found" });
+                } else {
+                    resolve({ profile: {
+                        realname: res.realname,
+                        phoneNumber: res.phoneNumber
+                    }});
+                }
+            });
         });
     }
 }

@@ -4,7 +4,7 @@ var encodeToken = function (data: object): string {
     return encode(data, "SECRET_KEY");
 }
 
-var decodeToken = function (token: string): object {
+var decodeToken = function (token: string): any {
     return decode(token, "SECRET_KEY");
 }
 

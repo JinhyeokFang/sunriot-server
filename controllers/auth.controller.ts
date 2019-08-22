@@ -1,23 +1,23 @@
 import { ResponseSuccess, ResponseForbidden, ResponseNotFound, ResponseInternalServerError } from '../utils/response';
 import { Request, Response } from 'express';
-import { encodeToken } from '../utils/jwt';
+import { decodeToken, encodeToken } from '../utils/jwt';
 
 import user from '../models/user.model'
 
 class AuthController {
     public login(req: Request, res: Response): void {
         let { username, password } = req.body;
-        
-        user.login(username, password, (result: any): void => {
+
+        user.login(username, password).then(result => {
+            ResponseSuccess(res, {token: encodeToken({
+                username: username,
+                time: new Date().getTime()
+            })});
+        }).catch(result => {
             if (result.err == "the user not found") {
                 ResponseNotFound(res, {});
-            } else if (result.err) {
-                ResponseInternalServerError(res, {err: result.err});
             } else {
-                ResponseSuccess(res, {token: encodeToken({
-                    username: username,
-                    time: new Date().getTime()
-                })});
+                ResponseInternalServerError(res, {err: result.err});
             }
         });
     }
@@ -25,16 +25,31 @@ class AuthController {
     public register(req: Request, res: Response): void {
         let { username, password, realname, phoneNumber } = req.body;  
         
-        user.register(username, password, realname, phoneNumber, (result: any): void => {
+        user.register(username, password, realname, phoneNumber).then(result => {
+            ResponseSuccess(res, {token: encodeToken({
+                username: username,
+                time: new Date().getTime()
+            })});
+        }).catch(result => {
             if (result.err == "the user already exist.") {
-                ResponseForbidden(res, {});
-            } else if (result.err) {
-                ResponseInternalServerError(res, {err: result.err});
+                ResponseForbidden(res, {err: result.err});
             } else {
-                ResponseSuccess(res, {token: encodeToken({
-                    username: username,
-                    time: new Date().getTime()
-                })});
+                ResponseInternalServerError(res, {err: result.err});
+            }
+        });
+    }
+
+    public getUserProfile(req: Request, res: Response): void {
+        let { token } = req.body;
+        let username = decodeToken(token).username;
+
+        user.getUserProfile(username).then(result => {
+            ResponseSuccess(res, {profile: result.profile});
+        }).catch(result => {
+            if (result.err == "the user not found") {
+                ResponseNotFound(res, {});
+            } else {
+                ResponseInternalServerError(res, {err: result.err});
             }
         });
     }
