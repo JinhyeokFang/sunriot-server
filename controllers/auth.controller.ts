@@ -21,6 +21,15 @@ class AuthController {
             }
         });
     }
+
+    public kakaoLogin(req: Request, res: Response): void {
+        let { id, nickname } = req.body;
+
+        ResponseSuccess(res, {token: encodeToken({
+            username: id + nickname,
+            time: new Date().getTime()
+        })});
+    }
     
     public register(req: Request, res: Response): void {
         let { username, password, realname, phoneNumber } = req.body;  
