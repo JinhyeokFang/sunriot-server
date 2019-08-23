@@ -26,7 +26,7 @@ class User {
         });
     }
 
-    public register(username: string, password: string, realname: string, phoneNumber: string): Promise<any> {
+    public register(username: string, password: string, realname: string = "", phoneNumber: string = ""): Promise<any> {
         return new Promise((resolve: Function, reject: Function): void => {
             this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
                 if (err) {
