@@ -21,8 +21,6 @@ services:
       - DB=test
     networks: # 각 컨테이너를 연결하는 네트워크
       - backend
-    depends_on:
-      - mongodb
 
 networks: # 가장 기본적인 bridge 네트워크
   backend:
