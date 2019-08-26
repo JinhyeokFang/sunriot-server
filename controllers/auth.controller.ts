@@ -14,9 +14,9 @@ class AuthController {
         })});
     }
 
-    public getUserProfile(req: Request, res: Response): void {
+    public async getUserProfile(req: Request, res: Response): void {
         let { token } = req.body;
-        let username;
+        let username: string;
         if (!isVaildToken(token)) {
             ResponseUnauthorized(res, { err: "token is invaild, login please" });
             return;
@@ -24,18 +24,18 @@ class AuthController {
 
         username = decodeToken(token).username;
 
-        user.getUserProfile(username).then(result => {
+        let result = await user.getUserProfile(username);
+
+        if (result.err == "the user not found") {
+            ResponseNotFound(res, {});
+        } else if (result.err) {
+            ResponseInternalServerError(res, {err: result.err});
+        } else {
             ResponseSuccess(res, {profile: result.profile, token: encodeToken({
                 username: username,
                 time: new Date().getTime()
             })});
-        }).catch(result => {
-            if (result.err == "the user not found") {
-                ResponseNotFound(res, {});
-            } else {
-                ResponseInternalServerError(res, {err: result.err});
-            }
-        });
+        }
     }
 }
 

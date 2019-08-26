@@ -16,9 +16,9 @@ class User {
         return new Promise((resolve: Function, reject: Function): void => {
             this.userModelInstance.findOne({username: encrypt(username), password: encrypt(password)}, (err: object, res: UserModel): void => {
                 if (err) {
-                    reject({ err });
+                    resolve({ err });
                 } else if (res == null) {
-                    reject({ err: "the user not found" });
+                    resolve({ err: "the user not found" });
                 } else {
                     resolve({});
                 }
@@ -30,16 +30,16 @@ class User {
         return new Promise((resolve: Function, reject: Function): void => {
             this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
                 if (err) {
-                    reject({ err });
+                    resolve({ err });
                 } else if (res == null) {
                     new this.userModelInstance({username: encrypt(username), password: encrypt(password), realname, phoneNumber}).save((err: object): void => {
                         if (err)
-                            reject({ err });
+                            resolve({ err });
                         else
                             resolve({});
                     })
                 } else {
-                    reject({ err: "the user already exist."});
+                    resolve({ err: "the user already exist."});
                 }
             });
         });
@@ -49,9 +49,9 @@ class User {
         return new Promise((resolve: Function, reject: Function): void => {
             this.userModelInstance.findOne({username: encrypt(username)}, (err: object, res: UserModel): void => {
                 if (err) {
-                    reject({ err });
+                    resolve({ err });
                 } else if (res == null) {
-                    reject({ err: "the user not found" });
+                    resolve({ err: "the user not found" });
                 } else {
                     resolve({ profile: {
                         realname: res.realname,
