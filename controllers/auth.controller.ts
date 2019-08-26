@@ -14,7 +14,7 @@ class AuthController {
         })});
     }
 
-    public async getUserProfile(req: Request, res: Response): void {
+    public async getUserProfile(req: Request, res: Response): Promise<void> {
         let { token } = req.body;
         let username: string;
         if (!isVaildToken(token)) {

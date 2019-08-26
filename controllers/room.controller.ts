@@ -5,7 +5,7 @@ import room from "../models/room.model";
 import { encodeToken, decodeToken, isVaildToken } from '../utils/jwt';
 
 class RoomController {
-    public async checkin(req: Request, res: Response): void {
+    public async checkin(req: Request, res: Response): Promise<void> {
         let { roomNumber, token } = req.body;
         let username;
         if (!isVaildToken(token)) {
@@ -30,7 +30,7 @@ class RoomController {
             })});
         }
     }
-    public async checkout(req: Request, res: Response): void {
+    public async checkout(req: Request, res: Response): Promise<void> {
         let { roomNumber, token } = req.body;
         let username;
         if (!isVaildToken(token)) {
@@ -58,7 +58,7 @@ class RoomController {
             })});
         }
     }
-    public async getRooms(req: Request, res: Response): void {
+    public async getRooms(req: Request, res: Response): Promise<void> {
         let result = await room.getRooms();
         if (result.err) {
             ResponseInternalServerError(res, { err: result.err });
